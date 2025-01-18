@@ -1,18 +1,21 @@
-# qb-rentals
-This is a vehicle rental script for Cars, Aircrafts and Boats. This script is made for the qbcore framework and utilizes qb-target and qb-menu.
+# rental_cars
+This is a vehicle rental script for cars/bikes/trucks, aircraft, and boats. 
 
-# Features
+This script is forked from the wonderful [qb-rentals by carbontheape](https://github.com/carbontheape/qb-rentals), 
+and aims to support both the QBCore and QBox frameworks.
+
+## Features
 - Fully Configurable
-- Checks to see if player has correct amount of cash
-- Checks to see if rental spot it open
-- Provides rental papers for the vehicle
-- Not in use 0.00 In use 0.00-0.01
+- Provides physical rental papers item in inventory
+- <=0.01ms tick time
 - Ability to return all vehicles 
-- License Checks
 
-# Dependencies 
+## Dependencies 
+### QBCore
 - [qb-target](https://github.com/BerkieBb/qb-target)
 - [qb-menu](https://github.com/qbcore-framework/qb-menu)
+
+### QBox
 
 # Installation
 Go to qb-core/server/player.lua (line 94)

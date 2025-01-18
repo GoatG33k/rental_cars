@@ -6,29 +6,41 @@ Config = {
     --- Configure integrations with other resources
     Resources = {
         --- Set the framework you want to use here.
+        ---
         ---   Supported:
-        ---     "qb-core"  (QBCore)
         ---     "qbx_core" (QBox)
+        ---
         Framework = "qbx_core",
 
         --- Set the framework you want to use for rendering menus
+        ---
         ---   Supported:
-        ---     "qb-menu"  (QBCore menu)
         ---     "qbx_core" (QBox core menu)
-        Menu = "qb-menu",
+        ---
+        Menu = "qbx_core",
 
-        --- The fuel framework to integrate with
+        --- The targeting resource to integrate with
+        ---
         ---   Supported:
-        ---     "lj-fuel"
-        ---     false (disabled)
-        Fuel = "lj-fuel",
+        ---     "ox_target"
+        ---
+        Target = "ox_target",
+
+        --- The notification resource to integrate with
+        ---
+        ---   Supported:
+        ---     "qbx_core"  (QBox)
+        ---
+        Notify = "qbx_core",
 
         --- The inventory resource to integrate with
+        ---
         ---   Supported:
         ---     "ox_inventory"
+        ---
         Inventory = "ox_inventory",
     },
-    -- Locations data
+    -- Future locations data, see below!
     Locations = {},
 }
 
@@ -47,13 +59,13 @@ Config = {
 addLocation {
     kind = "vehicle",
     pedModel = `a_m_y_business_03`,
-    pedCoords = vector4(109.9739, -1088.61, 28.302, 345.64),
+    pedCoords = vector4(114.6518, -1083.8407, 29.1613, 72.3361),
     vehSpawn = vector4(111.4223, -1081.24, 29.192, 340.0),
     blip = { color = 50, sprite = 56 },
     vehicles = {
-        { model = "futo",    hourlyCost = 600 },
-        { model = "bison",   hourlyCost = 800 },
-        { model = "sanchez", hourlyCost = 750 },
+        { model = "futo",    dailyCost = 600 },
+        { model = "bison",   dailyCost = 800 },
+        { model = "sanchez", dailyCost = 750 },
     }
 }
 
@@ -64,9 +76,9 @@ addLocation {
     vehSpawn = vector4(-1673.4, -3158.47, 13.99, 331.49),
     blip = { color = 32, sprite = 578 },
     vehicles = {
-        { model = "seasparrow", hourlyCost = 7500 },
-        { model = "frogger2",   hourlyCost = 9500 },
-        { model = "swift",      hourlyCost = 11000 },
+        { model = "seasparrow", dailyCost = 7500 },
+        { model = "frogger2",   dailyCost = 9500 },
+        { model = "swift",      dailyCost = 11000 },
     }
 }
 
@@ -77,8 +89,8 @@ addLocation {
     vehSpawn = vector4(-794.95, -1506.27, 1.08, 107.79),
     blip = { color = 42, sprite = 410 },
     vehicles = {
-        { model = "seashark3", hourlyCost = 5000 },
-        { model = "dinghy3",   hourlyCost = 7500 },
-        { model = "longfin",   hourlyCost = 11000 },
+        { model = "seashark3", dailyCost = 5000 },
+        { model = "dinghy3",   dailyCost = 7500 },
+        { model = "longfin",   dailyCost = 11000 },
     }
 }

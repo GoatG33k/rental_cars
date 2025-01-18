@@ -1,47 +1,26 @@
+local RentalConfig = Config ---@as RentalCarsConfig
 CreateThread(function()
-    local dist <const> = 3.0;
-    local radius <const> = 0.4;
-    local spawnPoints <const> = {
-        Vehicle = {
-            pos = vector3(109.9739, -1088.61, 28.302),
-            opts = {
-                icon = "fas fa-car",
-                LicenseType = "driver",
-                MenuType = "vehicle",
-            }
-        },
-        Aircraft = {
-            pos = vector3(-1686.57, -3149.22, 12.99),
-            opts = {
-                icon = "fas fa-car",
-                LicenseType = "pilot",
-                MenuType = "aircraft",
-            }
-        },
-        Boat = {
-            pos = vector3(-753.5, -1512.27, 4.02),
-            opts = {
-                icon = "fas fa-boat",
-                MenuType = "boat"
-            }
-        }
-    }
+    local dist <const> = 5.0;
 
-    for k, data in pairs(spawnPoints) do
-        local pos = data.pos
-        local opts = data.opts
-        local name = "rental_cars_" .. k
+    -- Register each of the spawn points
+    for i, data in pairs(RentalConfig.Locations) do
+        local name = "rental_cars_menu_" .. i
+        local pos = data.pedCoords
+        print("Registering " .. data.kind .. " rental location with " .. RentalConfig.Resources.Target .. " at " .. pos)
 
-        exports['qb-target']:AddCircleZone(name, pos, radius, { name = name, debugPoly = false }, {
-            options = {
-                type = "client",
-                event       = "qb-rental:client:LicenseCheck",
-                label       = "Rent " .. k,
-                icon        = opts.icon,
-                LicenseType = opts.LicenseType,
-                MenuType    = opts.MenuType
-            },
-            distance = dist
-        })
+        if RentalConfig.Resources.Target == "ox_target" then
+            exports.ox_target:addSphereZone({
+                name = name,
+                coords = vector3(pos[1], pos[2], pos[3]),
+                radius = dist,
+                options = {
+                    distance = dist,
+                    onSelect = function() TriggerServerEvent("rental_cars:requestMenu", i) end,
+                    icon = "",
+                    label = "Rent " .. data.kind,
+                }
+            })
+            cleanupHandler(function() exports.ox_target:removeZone(name) end)
+        end
     end
 end)

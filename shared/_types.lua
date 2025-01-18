@@ -1,22 +1,24 @@
 ---@alias RentalCarKind "vehicle"|"aircraft"|"boat"
----@alias RentalCarFramework "qb-core"|"qbx_core"
----@alias RentalCarMenuFramework "qbx_core"|"qb-menu"
----@alias RentalCarInventoryFramework "qb-inventory"|"ox_inventory"
----@alias RentalCarFuelFramework "lj-fuel"
+---@alias RentalCarTargetFramework "ox_target"
+---@alias RentalCarFramework "qbx_core"
+---@alias RentalCarMenuFramework "qbx_core"
+---@alias RentalCarInventoryFramework "ox_inventory"
 ---@alias RentalCarLicenseKind "driver"|"pilot"|nil
+---@alias RentalCarNotifyFramework "qbx_core"|"ox_notify"
 
----@class RentalCarLocation
----@field kind RentalCarKind
----@field pedhash Hash
----@field coords vector4
----@field spawnpoint vector4
+---@class RentalCarsConfigResourceOptions
+---@field Framework RentalCarFramework
+---@field Menu RentalCarMenuFramework
+---@field Target RentalCarTargetFramework
+---@field Inventory RentalCarInventoryFramework
+---@field Notify RentalCarNotifyFramework
 
 ---@class RentalCarsConfig
----@field Resources {Framework:RentalCarFramework,Menu:RentalCarMenuFramework,Fuel:RentalCarFuelFramework,Inventory:RentalCarInventoryFramework}
+---@field Resources RentalCarsConfigResourceOptions
 ---@field Locations table<number, RentalCarLocation>
 ---@field ItemKey string
 
----@class RentalCarLocationOpts
+---@class RentalCarLocation
 ---@field kind RentalCarKind
 ---@field pedModel string
 ---@field pedCoords vector4
@@ -24,7 +26,7 @@
 ---@field vehicles RentalCarLocationVehicleList
 ---@field blip? {sprite?:number,color?:number}
 
----@alias RentalCarLocationVehicleList table<number, {model:string,hourlyCost:number}>
+---@alias RentalCarLocationVehicleList table<number, {model:string,dailyCost:number}>
 
 ---@class RentalPapersMeta
 ---@field citizenID string
