@@ -1,20 +1,20 @@
 fx_version 'cerulean'
 game 'gta5'
 
-author 'Carbon#1002'
-description 'qb-rentals'
-version '2.0'
+author 'Carbon#1002, GoatGeek'
+description 'rental_cars - Fork of qb-rentals'
+version '3.0.0'
 
 shared_scripts {
-    '@qb-core/shared/locale.lua',
-    'locales/en.lua',
+    'shared/functions.lua',
     'config.lua'
 }
 
-client_script {
+client_scripts {
     'client/cl_*.lua'
 }
 
-server_script {
-    'server/sv_*.lua'
+server_scripts {
+    'server/RentalCarAgency.lua',
+    'server/sv_*.lua',
 }

@@ -1,51 +1,47 @@
-CreateThread(function(data)
-    exports['qb-target']:AddCircleZone("VehiclePed", vector3(109.9739, -1088.61, 28.302), 0.4, { 
-        name = "vehicleped", 
-        debugPoly = false,
-      }, {
-        options = {
-            {
-                type = "client",
-                event = "qb-rental:client:LicenseCheck",
+CreateThread(function()
+    local dist <const> = 3.0;
+    local radius <const> = 0.4;
+    local spawnPoints <const> = {
+        Vehicle = {
+            pos = vector3(109.9739, -1088.61, 28.302),
+            opts = {
                 icon = "fas fa-car",
-                label = "Rent Vehicle",
                 LicenseType = "driver",
                 MenuType = "vehicle",
-            },
+            }
         },
-        distance = 3.0
-      })
-    
-    exports['qb-target']:AddCircleZone("AircraftPed", vector3(-1686.57, -3149.22, 12.99), 0.4, { 
-        name = "aircraftped", 
-        debugPoly = false,
-      }, {
-        options = {
-            {
-                type = "client",
-                event = "qb-rental:client:LicenseCheck",
+        Aircraft = {
+            pos = vector3(-1686.57, -3149.22, 12.99),
+            opts = {
                 icon = "fas fa-car",
-                label = "Rent Aircraft",
                 LicenseType = "pilot",
                 MenuType = "aircraft",
-            },
+            }
         },
-        distance = 3.0
-        })
-
-    exports['qb-target']:AddCircleZone("BoatPed", vector3(-753.5, -1512.27, 4.02), 0.4, { 
-        name = "boatped", 
-        debugPoly = false,
-        }, {
-        options = {
-            {
-                type = "client",
-                event = "qb-rental:client:openMenu",
-                icon = "fas fa-car",
-                label = "Rent Aircraft",
+        Boat = {
+            pos = vector3(-753.5, -1512.27, 4.02),
+            opts = {
+                icon = "fas fa-boat",
                 MenuType = "boat"
+            }
+        }
+    }
+
+    for k, data in pairs(spawnPoints) do
+        local pos = data.pos
+        local opts = data.opts
+        local name = "rental_cars_" .. k
+
+        exports['qb-target']:AddCircleZone(name, pos, radius, { name = name, debugPoly = false }, {
+            options = {
+                type = "client",
+                event       = "qb-rental:client:LicenseCheck",
+                label       = "Rent " .. k,
+                icon        = opts.icon,
+                LicenseType = opts.LicenseType,
+                MenuType    = opts.MenuType
             },
-        },
-        distance = 3.0
+            distance = dist
         })
+    end
 end)
