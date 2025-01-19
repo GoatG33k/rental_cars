@@ -49,7 +49,7 @@ RegisterNetEvent("rental_cars:rent", function(idx, vehicleIdx)
     end
 
     notifyClient(source,
-        "You have rented a " .. rentalVehicle.model .. " for $" .. rentalVehicle.dailyCost .. " per day.", "success")
+        "You have rented a " .. rentalVehicle.model .. " for $" .. rentalVehicle.dailyCost, "success")
 
     -- If we're running on QBox, we must create it server-side
     local netID = nil
@@ -88,7 +88,7 @@ AddEventHandler("playerDropped", function()
     if rental then RentalCarAgency:returnRental(source) end
 end)
 
-AddEventHandler("entityDeleted", function(entity)
+AddEventHandler("entityRemoved", function(entity)
     if GetEntityType(entity) ~= 2 then return end
     for k, v in pairs(RentalCarAgency.rentals) do
         if v.entity == entity then

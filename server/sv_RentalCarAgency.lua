@@ -166,5 +166,5 @@ function RentalCarAgency:_free(source)
     if not rental then return end
     if DoesEntityExist(rental.entity) then DeleteEntity(rental.entity) end
     RentalCarAgency:returnRental(source)
-    RentalCarAgency.rentals[k] = nil
+    self.rentals[tostring(source)] = nil
 end

@@ -29,7 +29,7 @@ function CreateMenu(idx)
             vehicleOptions[#vehicleOptions + 1] = {
                 id = contextName .. "_" .. k,
                 title = v.model,
-                description = "Rent this vehicle for $" .. v.dailyCost .. " per day",
+                description = "Rent this vehicle for $" .. v.dailyCost,
                 onSelect = function()
                     if CheckIfAnyVehicleBlocking(idx) then
                         TriggerEvent("rental_cars:notify", "There is a vehicle blocking the spawn point.", "error")
