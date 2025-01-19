@@ -12,15 +12,10 @@ RegisterNetEvent("rental_cars:requestMenu", function(idx)
         return notifyClient(source, "Invalid rental location requested.", "error")
     end
 
-    -- Distance check
     local location = RentalConfig.Locations[idx]
-    local pedPos = GetEntityCoords(GetPlayerPed(source))
-    if #(vec4(pedPos[1], pedPos[2], pedPos[3], location.pedCoords[4]) - location.pedCoords) > 15.0 then
-        return notifyClient(source, "You are too far away from the rental agent.", "error")
-    end
-
-    if not RentalCarAgency:isEligible(source, location) then
-        return notifyClient(source, "You don't have the proper license for this type of vehicle.", "error")
+    local eligible, err = RentalCarAgency:checkEligibility(source, location)
+    if not eligible then
+        return notifyClient(source, err, "error")
     else
         TriggerClientEvent("rental_cars:openMenu", source, idx)
     end
@@ -29,15 +24,14 @@ end)
 ---@param idx number
 ---@param vehicleIdx number
 RegisterNetEvent("rental_cars:rent", function(idx, vehicleIdx)
+    local source = source ---@type number
     if not RentalConfig.Locations[idx] or not RentalConfig.Locations[idx].vehicles[vehicleIdx] then
-        local source = source
         return notifyClient(source, "Invalid rental vehicle requested.", "error")
     end
 
     local location = RentalConfig.Locations[idx]
-    if not RentalCarAgency:isEligible(source, location) then
-        return notifyClient(source, "You don't have the proper license for this type of vehicle.", "error")
-    end
+    local eligible, err = RentalCarAgency:checkEligibility(source, location)
+    if not eligible then return notifyClient(source, err, "error") end
 
     local rentalVehicle = RentalConfig.Locations[idx].vehicles[vehicleIdx]
     print("User " .. source .. " is requesting to rent a " .. rentalVehicle.model ..
@@ -61,15 +55,45 @@ RegisterNetEvent("rental_cars:rent", function(idx, vehicleIdx)
     local netID = nil
     if RentalConfig.Resources.Framework == "qbx_core" then
         print("model=" .. rentalVehicle.model .. ", hash=" .. GetHashKey(rentalVehicle.model))
-        netID, _ = qbx.spawnVehicle({
+        netID, veh = qbx.spawnVehicle({
             model = GetHashKey(rentalVehicle.model),
             spawnSource = location.vehSpawn,
             warp = GetPlayerPed(source),
         })
+        if not netID then
+            print("^1Failed to spawn vehicle for " .. source .. " (" .. GetPlayerName(source) .. ")^0")
+            return notifyClient(source, "Failed to spawn rental vehicle.", "error")
+        end
+
+        print("Spawned vehicle " .. rentalVehicle.model .. " for " .. source .. " (" .. GetPlayerName(source) .. ")")
+        RentalCarAgency.rentals[tostring(source)] = {
+            entity = veh,
+            plate = GetVehicleNumberPlateText(veh),
+        }
+    else
+        error("Unsupported framework: " .. RentalConfig.Resources.Framework)
     end
-    TriggerClientEvent("rental_cars:spawn", source, idx, vehicleIdx, netID)
+    TriggerClientEvent("rental_cars:spawn", source, idx, vehicleIdx, VehToNet(netID))
 end)
 
+--- Handle a player returning a vehicle
 RegisterNetEvent("rental_cars:return", function()
     RentalCarAgency:returnRental(source)
+end)
+
+--- Automatically clean up rentals when a player disconnects
+AddEventHandler("playerDropped", function()
+    local source = tonumber(source)
+    local rental = RentalCarAgency.rentals[tostring(source)]
+    if rental then RentalCarAgency:returnRental(source) end
+end)
+
+AddEventHandler("entityDeleted", function(entity)
+    if GetEntityType(entity) ~= 2 then return end
+    for k, v in pairs(RentalCarAgency.rentals) do
+        if v.entity == entity then
+            print("returning rental for " .. GetPlayerName(k) .. " (vehicle was deleted)")
+            RentalCarAgency:returnRental(tonumber(k))
+        end
+    end
 end)

@@ -23,9 +23,8 @@ function CreateMenu(idx)
 
     if RentalConfig.Resources.Menu == "qbx_core" then
         local contextName = "rental_cars_menu_" .. idx
-        local vehicleListContextName = contextName .. "_VEH"
-
         local vehicleOptions = {}
+
         for k, v in ipairs(location.vehicles) do
             vehicleOptions[#vehicleOptions + 1] = {
                 id = contextName .. "_" .. k,
@@ -43,28 +42,10 @@ function CreateMenu(idx)
         end
 
         lib.registerContext({
-            id = vehicleListContextName,
-            title = "Rent " .. location.kind,
+            id = contextName,
+            title = "Rent a " .. location.kind,
             options = vehicleOptions
         })
-
-        lib.registerContext({
-            id = contextName,
-            title = "Rent " .. location.kind,
-            options = {
-                {
-                    title = "Rent",
-                    description = "Rent a " .. location.kind,
-                    onSelect = function() lib.showContext(vehicleListContextName) end
-                },
-                {
-                    title = "Return Rental",
-                    description = "Return a rental " .. location.kind,
-                    onSelect = function() TriggerServerEvent("rental_cars:return", idx, k) end
-                }
-            }
-        })
-
         lib.showContext(contextName)
     else
         error("Unsupported menu framework: " .. RentalConfig.Resources.Menu)

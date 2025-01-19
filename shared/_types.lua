@@ -20,6 +20,7 @@
 
 ---@class RentalCarLocation
 ---@field kind RentalCarKind
+---@field scenario? string
 ---@field pedModel string
 ---@field pedCoords vector4
 ---@field vehSpawn vector4

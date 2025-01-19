@@ -34,14 +34,39 @@ CreateThread(function()
             local ped = CreatePed(5, pedModel, pos[1], pos[2], pos[3], pos[4], false, false)
             SetEntityInvincible(ped, true)
             SetBlockingOfNonTemporaryEvents(ped, true)
-            CreateThread(function()
-                Wait(1250)
-                FreezeEntityPosition(ped, true)
-                TaskStartScenarioInPlace(ped, "WORLD_HUMAN_STAND_MOBILE", 0, true)
-            end)
-
-            print("Created ped " .. ped .. " for location #" .. i .. " of kind " .. data.kind)
+            FreezeEntityPosition(ped, true)
+            TaskStartScenarioInPlace(ped, data.scenario or "WORLD_HUMAN_STAND_MOBILE", 0, true)
             cleanupHandler(function() DeleteEntity(ped) end)
+
+            local dist <const> = 5.0;
+            local name = "rental_cars_menu_" .. i
+            if RentalConfig.Resources.Target == "ox_target" then
+                -- Rent car
+                exports.ox_target:addLocalEntity({ ped }, {
+                    name = name,
+                    onSelect = function() TriggerServerEvent("rental_cars:requestMenu", i) end,
+                    icon = "fa-solid fa-car",
+                    label = "Rent " .. data.kind,
+                })
+                -- Return car
+                exports.ox_target:addLocalEntity({ ped }, {
+                    name = name .. "_return",
+                    onSelect = function() TriggerServerEvent("rental_cars:return", i) end,
+                    icon = "fa-solid fa-car",
+                    label = "Return Rental"
+                })
+                cleanupHandler(function() exports.ox_target:removeZone(name) end)
+            end
         end
+    end
+end)
+
+--- Create targets on the NPC
+CreateThread(function()
+    -- Register each of the spawn points
+    for i, data in pairs(RentalConfig.Locations) do
+        local name = "rental_cars_menu_" .. i
+        local pos = data.pedCoords
+        print("Registering " .. data.kind .. " rental location with " .. RentalConfig.Resources.Target .. " at " .. pos)
     end
 end)
