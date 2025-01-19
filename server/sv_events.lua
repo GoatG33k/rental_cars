@@ -73,7 +73,7 @@ RegisterNetEvent("rental_cars:rent", function(idx, vehicleIdx)
     else
         error("Unsupported framework: " .. RentalConfig.Resources.Framework)
     end
-    TriggerClientEvent("rental_cars:spawn", source, idx, vehicleIdx, VehToNet(netID))
+    TriggerClientEvent("rental_cars:spawn", source, idx, netID)
 end)
 
 --- Handle a player returning a vehicle
